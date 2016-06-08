@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="action_settings">Settings</string>
+    <string name="url_err">服务器繁忙，稍后再试。</string>
+    <string name="index">首页</string>
+    <string name="send">发送</string>
+    <string name="personal_info">详细资料</string>
+</resources>

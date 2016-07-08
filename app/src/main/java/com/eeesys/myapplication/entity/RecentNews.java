@@ -1,9 +1,11 @@
 package com.eeesys.myapplication.entity;
 
+import cn.bmob.v3.BmobObject;
+
 /**
  * Created by ASUS on 2016/6/7.
  */
-public class RecentNews {
+public class RecentNews extends BmobObject{
     public String getContent() {
         return content;
     }
@@ -12,14 +14,15 @@ public class RecentNews {
         this.content = content;
     }
 
-    public int getNews_img() {
-        return news_img;
+
+    public String getImgUrl() {
+        return imgUrl;
     }
 
-    public void setNews_img(int news_img) {
-        this.news_img = news_img;
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 
-    private int news_img;
+    private String imgUrl;
     private String content;
 }

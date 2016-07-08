@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.eeesys.myapplication.R;
 import com.eeesys.myapplication.entity.RecentNews;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -41,7 +42,8 @@ public class RecentNewsAdapter extends RecyclerView.Adapter<RecentNewsAdapter.My
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        holder.iv_news_img.setImageResource(data.get(position).getNews_img());
+        //holder.iv_news_img.setImageResource(data.get(position).getNews_img());
+        Picasso.with(context).load(data.get(position).getImgUrl()).into(holder.iv_news_img);
         holder.tv_content.setText(data.get(position).getContent());
 
         if(mlistener!=null){

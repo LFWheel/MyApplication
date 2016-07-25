@@ -6,10 +6,11 @@ android {
 
     defaultConfig {
         applicationId "com.eeesys.myapplication"
-        minSdkVersion 19
+        minSdkVersion 14
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -26,12 +27,21 @@ dependencies {
     compile 'com.android.support:design:23.3.0'
     compile 'com.android.support:support-v4:23.3.0'
     //bmob-sdk：Bmob的android sdk包，包含了Bmob的数据存储、文件等服务，以下是最新的bmob-sdk:
-    //3.4.7-aar：请务必查看下面注释[1]
-    compile 'cn.bmob.android:bmob-sdk:3.4.7-aar'
+    compile 'cn.bmob.android:bmob-sdk:3.4.6'
 
     //bmob-push：Bmob的推送包
     compile 'cn.bmob.android:bmob-push:0.8'
 
     //picasso图片加载框架
     compile 'com.squareup.picasso:picasso:2.5.2'
+
+    //RxJava,RxAndroid
+    compile 'io.reactivex:rxjava:1.0.14'
+    compile 'io.reactivex:rxandroid:1.0.1'
+
+    // Retrofit & OkHttp
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+
+    compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
 }

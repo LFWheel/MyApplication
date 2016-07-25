@@ -1,11 +1,9 @@
 package com.eeesys.myapplication.ui.fragment;
 
-import android.content.Context;
-import android.net.Uri;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,17 +13,21 @@ import android.widget.Toast;
 
 import com.eeesys.myapplication.R;
 import com.eeesys.myapplication.entity.RecentNews;
+import com.eeesys.myapplication.entity.Recomend;
+import com.eeesys.myapplication.service.RecomendSrvice;
+import com.eeesys.myapplication.service.ServiceGenerator;
 import com.eeesys.myapplication.ui.adapter.RecentNewsAdapter;
-import com.eeesys.myapplication.view.DividerItemDecoration;
+import com.eeesys.myapplication.customview.DividerItemDecoration;
+import com.eeesys.myapplication.ui.adapter.RecomendAdapter;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -63,41 +65,30 @@ public class RecentFragment extends Fragment {
     }
 
     private void initData(){
-        /*RecentNews news1=new RecentNews();
-        news1.setContent("退役之战！2016年4月");
-        news1.setNews_img(R.mipmap.ic_launcher);
-        newsList.add(news1);
-
-        RecentNews news2=new RecentNews();
-        news2.setContent("2016得分集锦");
-        news2.setNews_img(R.mipmap.ic_launcher);
-        newsList.add(news2);*/
-        BmobQuery<RecentNews> query = new BmobQuery<>();
-        query.addWhereEqualTo("objectId","Vh9l666R");
-        query.findObjects(getActivity(), new FindListener<RecentNews>() {
+        RecomendSrvice service = ServiceGenerator.createService(RecomendSrvice.class);
+        Call<List<Recomend>> call = service.getRecomend();
+        final ProgressDialog pd = ProgressDialog.show(getActivity(),"Loding...","加载中...");
+        call.enqueue(new Callback<List<Recomend>>() {
             @Override
-            public void onSuccess(List<RecentNews> list) {
-                Log.d("query news++++++++",list.size()+"");
-                newsList = list;
-                adapter = new RecentNewsAdapter(getContext(),newsList);
-                adapter.notifyDataSetChanged();
-                adapter.setOnItemClickListener(new RecentNewsAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int postion) {
-                        Toast.makeText(getContext(),postion+"",Toast.LENGTH_SHORT).show();
+            public void onResponse(Call<List<Recomend>> call, Response<List<Recomend>> response) {
+                if(response.isSuccessful()){
+                   List<Recomend> recomends = response.body();
+                    for(Recomend r : recomends){
+                        RecentNews news = new RecentNews();
+                        news.setContent(r.getMark());
+                        news.setImgUrl(r.getImgUrl());
+                        newsList.add(news);
                     }
-
-                    @Override
-                    public void onItemLongClick(View view, int postion) {
-
-                    }
-                });
-                rv_news.setAdapter(adapter);
+                    adapter = new RecentNewsAdapter(getActivity(),newsList);
+                    rv_news.setAdapter(adapter);
+                }
+                pd.dismiss();
             }
 
             @Override
-            public void onError(int i, String s) {
-
+            public void onFailure(Call<List<Recomend>> call, Throwable t) {
+                Log.d("recomend err",t.getMessage());
+                pd.dismiss();
             }
         });
     }

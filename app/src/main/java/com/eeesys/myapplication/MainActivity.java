@@ -1,6 +1,7 @@
 package com.eeesys.myapplication;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -9,6 +10,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,53 +22,54 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
+import com.eeesys.myapplication.common.BaseActivity;
+import com.eeesys.myapplication.common.StatusBarCompat;
+import com.eeesys.myapplication.ui.activity.MyInfoActivity;
 import com.eeesys.myapplication.ui.adapter.MyFragmentPagerAdapter;
 import com.eeesys.myapplication.ui.fragment.HotFragment;
 import com.eeesys.myapplication.ui.fragment.MainFragment;
 import com.eeesys.myapplication.ui.fragment.RecentFragment;
+import com.eeesys.myapplication.ui.fragment.RecomendFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener{
-    DrawerLayout drawer;
+    private String TAG = "MainActivity";
+    private DrawerLayout drawer;
+    private Toolbar toolbar;
+    private NavigationView navigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    @Override
+    protected int setLayoutReourseId() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    protected void setUpView() {
+        toolbar = (Toolbar) $(R.id.toolbar);
+        toolbar.setTitle("首页");
         setSupportActionBar(toolbar);
-        toolbar.setTitle("");
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) $(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-        initWindow();
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        navigationView = (NavigationView) $(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setCheckedItem(R.id.nav_gallery);
-        setFragment(new MainFragment());
+       // navigationView.setCheckedItem(R.id.nav_gallery);
+        //setFragment(new MainFragment());
     }
 
-    private void initWindow(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
-            localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
-            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
-                //将侧边栏顶部延伸至status bar
-                drawer.setFitsSystemWindows(true);
-                //将主页面顶部延伸至status bar;虽默认为false,但经测试,DrawerLayout需显示设置
-                drawer.setClipToPadding(false);
-            }
-        }
-    }
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -83,9 +86,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -102,12 +102,14 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_recomend) {
             // Handle the camera action
+            setFragment(new RecomendFragment());
         } else if (id == R.id.nav_gallery) {
             setFragment(new MainFragment());
         } else if (id == R.id.nav_slideshow) {
-
+            Intent intent = new Intent(this, MyInfoActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
@@ -116,9 +118,8 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
+        return false;
     }
 
     private void setFragment(Fragment f){

@@ -1,4 +1,4 @@
-package com.eeesys.myapplication.view;
+package com.eeesys.myapplication.customview;
 
 import android.content.Context;
 import android.content.res.TypedArray;

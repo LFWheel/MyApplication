@@ -46,8 +46,7 @@ public class MainFragment extends Fragment {
     private void initView(View view) {
         fragment_titles = (TabLayout) view.findViewById(R.id.tab_fragment_title);
         vp_content = (ViewPager) view.findViewById(R.id.vp_content);
-       /* fragment_titles.addTab(fragment_titles.newTab().setText("最近新闻"));
-        fragment_titles.addTab(fragment_titles.newTab().setText("热门"));*/
+
         fragments = new ArrayList<Fragment>();
         hotFargment = new HotFragment();
         recentFragment = new RecentFragment();
